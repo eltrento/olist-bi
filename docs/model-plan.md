@@ -1,7 +1,7 @@
 # Star schema plan (prompt 02)
 
 Status: **approved 2026-11-07** (including the proposals for the former open questions, now in decisions.md). Business rules come from [decisions.md](decisions.md).
-Current state: `model/` and `report/` are empty; nothing is built yet.
+Current state: blank PBIP saved at the repo root (`olist-project.SemanticModel/`, `olist-project.Report/`); no tables built yet.
 
 ## Changes vs. the "Target model" in CLAUDE.md
 

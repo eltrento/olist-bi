@@ -4,6 +4,7 @@ data/raw/*
 data/processed/
 .env
 *.pbix
+# PBIP (olist-project.SemanticModel/, olist-project.Report/): ignore local-only files
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 __pycache__/

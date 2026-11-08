@@ -5,7 +5,8 @@ Goal: build a star-schema Power BI semantic model from the Olist Brazilian E-Com
 ## Environment
 - Windows. Tabular Editor 3 (3.27+) with its MCP server on http://127.0.0.1:42100/ (server name: `tabular-editor`).
 - Power BI Desktop with Power BI Project (.pbip) save format enabled (TMDL + PBIR).
-- Source of truth: the PBIP folders in `model/` (semantic model, TMDL) and `report/` (PBIR). These are text and tracked in git.
+- Source of truth: the Power BI Project at the repo root: `olist-project.pbip`, with `olist-project.SemanticModel/` (semantic model, TMDL in `definition/`) and `olist-project.Report/` (report, PBIR in `definition/`). These are text and tracked in git. The report references the model by relative path (`definition.pbir` → `../olist-project.SemanticModel`), so keep the two folders side by side.
+- Edit the model with Power BI Desktop open via External Tools → Tabular Editor (connects to Desktop's live model), then save in Desktop to write the TMDL. Don't edit the TMDL files directly while Desktop has the project open.
 - Python available for profiling: `python scripts/profile_data.py`.
 
 ## Data rules

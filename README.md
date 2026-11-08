@@ -47,7 +47,7 @@ Run these in order (type `Read prompts/01-explore-data.md and do it`):
 
 ## Part 4: Build the semantic model in Tabular Editor 3
 
-1. In TE3, create a new empty model (or open a model in a PBIP's `*.SemanticModel` folder). Save into `model/` as TMDL so it's git-friendly.
+1. In Power BI Desktop, save a blank report as a Power BI Project (`olist-project.pbip`) at the repo root. This creates `olist-project.SemanticModel/` (TMDL) and `olist-project.Report/` (PBIR) side by side. Then open TE3 from Desktop via **External Tools → Tabular Editor** so it connects to Desktop's live model; saving in Desktop writes the TMDL files.
 2. **Tools > MCP Server...** Set *Model metadata* to **Read/Write**. Leave *Model data* on Deny unless you want Claude to run DAX checks (data values then go to the model). Click **Start server**. Default address: `http://127.0.0.1:42100/`.
 3. In a terminal: `claude mcp add --transport http tabular-editor http://127.0.0.1:42100/` (or copy it from the dialog's *Export configuration*, which is required if you enable an access token).
    If PowerShell says `claude` is not recognized, the CLI is installed but `%USERPROFILE%\.local\bin` isn't on PATH: run `& "$env:USERPROFILE\.local\bin\claude.exe" mcp add ...` instead, or add that folder to your user PATH. Check with `claude mcp get tabular-editor` (should say Connected).
@@ -61,7 +61,7 @@ TE3's built-in AI Assistant pane (bring your own API key) is useful for quick in
 
 ## Part 5: Build the report
 
-1. Save the model as a PBIP so you have `*.SemanticModel` and `*.Report` (PBIR) folders in the project. Easiest: create a blank report in Power BI Desktop connected to the model and save as PBIP here.
+1. The report lives in `olist-project.Report/` (PBIR), created alongside the model in Part 4. It points at the model via `definition.pbir` (`../olist-project.SemanticModel`), so keep both folders together.
 2. Run `prompts/05-build-report.md`. Claude plans, you approve, it writes the PBIR files, then you reload in Desktop and give feedback ("cards are cramped, move the slicer left").
 3. Optional tooling (check current install steps and review what a plugin does before installing): Microsoft's Skills for Fabric Power BI report authoring skills (includes a PBIR validator and a Desktop bridge CLI), and the community marketplace `claude plugin marketplace add data-goblin/power-bi-agentic-development`.
 4. Don't edit files that Desktop has open and then save from Desktop: reload first, or you'll overwrite Claude's changes.

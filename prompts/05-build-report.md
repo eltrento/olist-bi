@@ -1,4 +1,4 @@
-Open the PBIP in model/ and report/ (plan first, no edits). Propose a 4-page report:
+Open the PBIP at the repo root (`olist-project.SemanticModel/` and `olist-project.Report/`; plan first, no edits). Propose a 4-page report:
 1. Executive Summary (KPIs, sales trend, top categories, map or state breakdown)
 2. Product & Category Performance
 3. Delivery & Reviews (on-time %, delivery days by state, score distribution)
