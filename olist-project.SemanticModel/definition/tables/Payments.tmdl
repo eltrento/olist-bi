@@ -1,0 +1,48 @@
+/// Fact. One row per payment of an order (Order ID + Payment Sequential).
+table Payments
+	lineageTag: c652bbfb-3377-43c4-a02e-1ecf1c739aca
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: e6215362-6e5c-4b77-92e3-5ffaa1c6e2d8
+		sourceColumn: Order ID
+
+	column 'Payment Sequential'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5b4505cc-c42b-4359-8df8-c6c0ce73dbbf
+		sourceColumn: Payment Sequential
+
+	/// Credit Card, Boleto, Voucher, Debit Card or Not Defined.
+	column 'Payment Type'
+		dataType: string
+		lineageTag: 0db27fd3-5816-4fec-bf84-1835ded7e38d
+		sourceColumn: Payment Type
+
+	column 'Payment Installments'
+		dataType: int64
+		formatString: 0
+		lineageTag: a5828f15-f37c-403c-81c7-0ca4b78164e7
+		sourceColumn: Payment Installments
+
+	/// Amount paid in BRL (includes freight; vouchers and installments make it differ from item totals).
+	column 'Payment Value'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 6f9aa07d-b48f-4427-ad5b-9e8e9d3927ad
+		sourceColumn: Payment Value
+
+	partition Payments = m
+		source =
+				let
+				    Source = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_order_payments_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"order_id", type text}, {"payment_sequential", Int64.Type}, {"payment_type", type text},
+				        {"payment_installments", Int64.Type}, {"payment_value", Currency.Type}}, "en-US"),
+				    ProperType = Table.TransformColumns(Typed, {{"payment_type", each Text.Proper(Text.Replace(_, "_", " ")), type text}}),
+				    Result = Table.RenameColumns(ProperType, {
+				        {"order_id", "Order ID"}, {"payment_sequential", "Payment Sequential"}, {"payment_type", "Payment Type"},
+				        {"payment_installments", "Payment Installments"}, {"payment_value", "Payment Value"}})
+				in
+				    Result
+

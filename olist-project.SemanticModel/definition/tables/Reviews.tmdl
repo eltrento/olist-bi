@@ -1,0 +1,57 @@
+/// Fact. One row per review of an order (Review ID + Order ID). Comment text is not loaded.
+table Reviews
+	lineageTag: 01ebed88-2dbb-4550-a230-380bdde9f828
+
+	column 'Review ID'
+		dataType: string
+		lineageTag: 2e231ead-1f5d-4ff7-b5c8-f575bbf9250d
+		sourceColumn: Review ID
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 9c51d9a1-f205-4a2c-9b34-bb41fdc30635
+		sourceColumn: Order ID
+
+	/// Score from 1 to 5.
+	column 'Review Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: 92b9d731-5898-4e0c-932e-e92469161c30
+		sourceColumn: Review Score
+
+	column 'Review Created Date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 53fe05f4-613e-49f3-964f-dea436987779
+		sourceColumn: Review Created Date
+
+	column 'Review Answer Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		lineageTag: 84649397-f4e2-407c-a2e8-44745a42cb40
+		sourceColumn: Review Answer Timestamp
+
+	/// True when the review has a non-empty comment message.
+	column 'Has Comment'
+		dataType: boolean
+		lineageTag: e6d93db0-5273-46d7-85a0-440e8a050e45
+		sourceColumn: Has Comment
+
+	partition Reviews = m
+		source =
+				let
+				    Source = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_order_reviews_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"review_id", type text}, {"order_id", type text}, {"review_score", Int64.Type},
+				        {"review_creation_date", type datetime}, {"review_answer_timestamp", type datetime}}, "en-US"),
+				    AddHasComment = Table.AddColumn(Typed, "Has Comment", each
+				        [review_comment_message] <> null and Text.Trim([review_comment_message]) <> "", type logical),
+				    AddCreatedDate = Table.AddColumn(AddHasComment, "Review Created Date", each DateTime.Date([review_creation_date]), type date),
+				    Renamed = Table.RenameColumns(AddCreatedDate, {
+				        {"review_id", "Review ID"}, {"order_id", "Order ID"}, {"review_score", "Review Score"},
+				        {"review_answer_timestamp", "Review Answer Timestamp"}}),
+				    Result = Table.SelectColumns(Renamed, {
+				        "Review ID", "Order ID", "Review Score", "Review Created Date", "Review Answer Timestamp", "Has Comment"})
+				in
+				    Result
+

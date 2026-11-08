@@ -1,0 +1,60 @@
+/// Fact. One row per item in an order (Order ID + Order Item Number).
+table 'Order Items'
+	lineageTag: 9f6d38cc-3cbb-4310-b150-61fad476ec4c
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 50ea355a-9ff4-470a-bc3c-1d777a0ffd5d
+		sourceColumn: Order ID
+
+	column 'Order Item Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 147bd9d7-52a3-4ccd-a567-0e9e22880a05
+		sourceColumn: Order Item Number
+
+	column 'Product ID'
+		dataType: string
+		lineageTag: ca78d48c-b5b6-4955-8cc6-a9a39acd79b7
+		sourceColumn: Product ID
+
+	column 'Seller ID'
+		dataType: string
+		lineageTag: 96c68bef-1134-4113-b67e-f635bf6729a3
+		sourceColumn: Seller ID
+
+	/// Seller's shipping deadline. Not related to Date (a few values fall in 2020).
+	column 'Shipping Limit Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		lineageTag: bdc952fa-c587-41ae-87f9-3f9b9ace39e1
+		sourceColumn: Shipping Limit Timestamp
+
+	/// Item price in BRL, excluding freight.
+	column Price
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 7339b94d-2c5e-40a1-a266-3e22a73e393e
+		sourceColumn: Price
+
+	/// Freight charged for the item in BRL.
+	column 'Freight Value'
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 02cb5b1b-5737-4f88-a76b-b7e3b1378438
+		sourceColumn: Freight Value
+
+	partition 'Order Items' = m
+		source =
+				let
+				    Source = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_order_items_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"order_id", type text}, {"order_item_id", Int64.Type}, {"product_id", type text}, {"seller_id", type text},
+				        {"shipping_limit_date", type datetime}, {"price", Currency.Type}, {"freight_value", Currency.Type}}, "en-US"),
+				    Result = Table.RenameColumns(Typed, {
+				        {"order_id", "Order ID"}, {"order_item_id", "Order Item Number"}, {"product_id", "Product ID"},
+				        {"seller_id", "Seller ID"}, {"shipping_limit_date", "Shipping Limit Timestamp"},
+				        {"price", "Price"}, {"freight_value", "Freight Value"}})
+				in
+				    Result
+

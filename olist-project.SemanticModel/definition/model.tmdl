@@ -16,6 +16,9 @@ ref table Orders
 ref table Customer
 ref table Product
 ref table Seller
+ref table 'Order Items'
+ref table Payments
+ref table Reviews
 
 ref cultureInfo en-US
 
