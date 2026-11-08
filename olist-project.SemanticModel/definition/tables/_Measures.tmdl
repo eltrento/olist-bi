@@ -1,0 +1,149 @@
+/// All explicit measures, grouped in display folders.
+table _Measures
+	lineageTag: 50fe2bc4-4675-4754-b83f-ade3038c4927
+
+	/// Sum of item price (excl. freight) on Sales orders (status not Canceled/Unavailable).
+	measure 'Total Sales' = CALCULATE( SUM( 'Order Items'[Price] ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: \R$ #,0.00
+		displayFolder: Sales
+		lineageTag: 80f1e1f7-9184-4037-b51a-95ffa2e5d05e
+
+	/// Sum of item freight on Sales orders.
+	measure 'Total Freight' = CALCULATE( SUM( 'Order Items'[Freight Value] ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: \R$ #,0.00
+		displayFolder: Sales
+		lineageTag: 48ad243f-061f-4811-abb1-addc620269eb
+
+	/// Number of order items on Sales orders.
+	measure 'Items Sold' = CALCULATE( COUNTROWS( 'Order Items' ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 58c8fb92-e37f-45d5-ae30-4ace6f5d623c
+
+	/// Number of Sales orders that have at least one item.
+	measure 'Order Count' = CALCULATE( DISTINCTCOUNT( 'Order Items'[Order ID] ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 38d43053-2b63-4e1c-b1ff-4d1b4185f651
+
+	/// Total Sales / Order Count (excl. freight).
+	measure 'Average Order Value' = DIVIDE( [Total Sales], [Order Count] )
+		formatString: \R$ #,0.00
+		displayFolder: Sales
+		lineageTag: 1efa8893-9800-42b9-86d1-230cf54b8dae
+
+	/// Sum of payment value on Sales orders. Includes freight; differs from Sales + Freight because of vouchers and installments.
+	measure 'Total Payments' = CALCULATE( SUM( Payments[Payment Value] ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: \R$ #,0.00
+		displayFolder: Sales
+		lineageTag: 7377b2e0-c58a-4ebe-9f91-2606e11467b6
+
+	/// Average days from purchase to delivery, over delivered orders. Sliced by delivered date.
+	measure 'Avg Delivery Days' = CALCULATE( AVERAGE( Orders[Delivery Days] ), USERELATIONSHIP( Orders[Delivered Date], 'Date'[Date] ) )
+		formatString: 0.0
+		displayFolder: Delivery
+		lineageTag: 45d4cc5b-737b-47ff-a3d3-5194c08e4bf0
+
+	/// Delivered orders whose delivered date is after the estimated delivery date. Sliced by delivered date.
+	measure 'Late Orders' =
+			CALCULATE(
+			    COUNTROWS( Orders ),
+			    KEEPFILTERS( Orders[Is Late] = TRUE( ) ),
+			    USERELATIONSHIP( Orders[Delivered Date], 'Date'[Date] )
+			)
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: f7574123-a2cf-4ffe-9874-5cb082198d04
+
+	/// Share of delivered orders delivered on or before the estimated date. Sliced by delivered date.
+	measure 'On-Time Delivery %' =
+			VAR Delivered =
+			    CALCULATE(
+			        COUNTROWS( Orders ),
+			        KEEPFILTERS( Orders[Is Delivered] = TRUE( ) ),
+			        USERELATIONSHIP( Orders[Delivered Date], 'Date'[Date] )
+			    )
+			RETURN
+			    DIVIDE( Delivered - [Late Orders], Delivered )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: ae3258a4-6aa4-4a4e-8bea-80e9e5ce8f84
+
+	/// Distinct customers (customer_unique_id) with at least one counted order (Sales order with items).
+	measure 'Unique Customers' =
+			COUNTROWS(
+			    CALCULATETABLE( VALUES( Orders[Customer Unique ID] ), 'Order Items', KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+			)
+		formatString: #,0
+		displayFolder: Customers
+		lineageTag: e22f9d32-31e6-4c03-9a57-f9702117965a
+
+	/// Share of Unique Customers with 2+ counted orders within the current filter.
+	measure 'Repeat Customer %' =
+			VAR Customers =
+			    CALCULATETABLE( VALUES( Orders[Customer Unique ID] ), 'Order Items', KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+			VAR Repeaters = COUNTROWS( FILTER( Customers, [Order Count] >= 2 ) )
+			RETURN
+			    DIVIDE( Repeaters, COUNTROWS( Customers ) )
+		formatString: 0.0%
+		displayFolder: Customers
+		lineageTag: 57b666c5-689a-4aab-a39f-c02ccf31ca8d
+
+	/// Average of per-order average review scores (each order weighs equally).
+	measure 'Avg Review Score' = AVERAGEX( VALUES( Reviews[Order ID] ), CALCULATE( AVERAGE( Reviews[Review Score] ) ) )
+		formatString: 0.00
+		displayFolder: Reviews
+		lineageTag: 29e6ae16-7b87-416a-8217-d01f2fc4e4e2
+
+	/// Share of reviews with score 5.
+	measure '% 5-Star' = DIVIDE( CALCULATE( COUNTROWS( Reviews ), KEEPFILTERS( Reviews[Review Score] = 5 ) ), COUNTROWS( Reviews ) )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: a7996af0-a853-4d7f-ab1e-185db62e40ed
+
+	/// Share of reviews with score 1.
+	measure '% 1-Star' = DIVIDE( CALCULATE( COUNTROWS( Reviews ), KEEPFILTERS( Reviews[Review Score] = 1 ) ), COUNTROWS( Reviews ) )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: 6c2e39fc-0a9f-461e-91be-97760b5c38a2
+
+	/// Total Sales year to date (by purchase date).
+	measure 'Sales YTD' = CALCULATE( [Total Sales], DATESYTD( 'Date'[Date] ) )
+		formatString: \R$ #,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 76eb0e28-aa64-4571-90d4-49a9cf6c4f45
+
+	/// Total Sales in the same period of the previous year.
+	measure 'Sales PY' = CALCULATE( [Total Sales], SAMEPERIODLASTYEAR( 'Date'[Date] ) )
+		formatString: \R$ #,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 70dcbee5-f266-46e1-bba0-33f5265f5f4a
+
+	/// Change of Total Sales vs. the same period last year. Blank when there are no prior-year sales.
+	measure 'Sales YoY %' = VAR PY = [Sales PY] RETURN IF( NOT ISBLANK( PY ), DIVIDE( [Total Sales] - PY, PY ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time Intelligence
+		lineageTag: f043830a-4e73-4b0c-86e9-0657d60b974d
+
+	/// Average monthly Total Sales over the 3 months ending with the last date in context (fewer months at the start of the data).
+	measure 'Sales 3M Moving Avg' =
+			CALCULATE(
+			    AVERAGEX( VALUES( 'Date'[Year Month Number] ), [Total Sales] ),
+			    DATESINPERIOD( 'Date'[Date], MAX( 'Date'[Date] ), -3, MONTH )
+			)
+		formatString: \R$ #,0.00
+		displayFolder: Time Intelligence
+		lineageTag: b2ace01e-d085-4a7b-9a21-d81c08704304
+
+	column Value
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: b871ff04-cf46-43d6-9a48-da882339cb11
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition _Measures = calculated
+		mode: import
+		source = { BLANK () }
+

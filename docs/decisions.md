@@ -35,3 +35,10 @@ Decided with the project owner after data exploration (prompt 01, 2026-11-07). C
 ## Delivery
 - An order counts as delivered when it has a delivered customer date (96,476), regardless of status (status and dates disagree on 14 orders).
 - Late = delivered customer **date** > estimated delivery **date** (date-only comparison; the estimate is always midnight, so a timestamp comparison would mark same-day deliveries late).
+
+## Measures (prompt 04, 2026-11-08)
+- Total Freight and Total Payments use the same scope as Sales: canceled/unavailable orders excluded.
+- Delivery measures (Avg Delivery Days, On-Time Delivery %, Late Orders) follow the **delivered date** on a time axis (`USERELATIONSHIP` on Orders[Delivered Date]).
+- Unique Customers = customers with at least one counted order (Sales order with items) in the current filter.
+- Repeat Customer % = share of those customers with 2+ counted orders **within the same filter** (period, state, ...), not lifetime.
+- % 5-Star / % 1-Star = share of **reviews** (review rows), not of orders.
