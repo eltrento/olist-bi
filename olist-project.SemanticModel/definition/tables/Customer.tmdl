@@ -4,22 +4,30 @@ table Customer
 
 	column 'Customer Unique ID'
 		dataType: string
+		isHidden
 		lineageTag: ee84f8e9-228d-471e-9c2b-95eecb5fa5b8
+		summarizeBy: none
 		sourceColumn: Customer Unique ID
 
+	/// First 5 digits of the zip code of the customer's most recent order.
 	column 'Customer Zip Prefix'
 		dataType: string
 		lineageTag: 1533be5c-17ef-4720-a240-5ad50903778c
+		summarizeBy: none
 		sourceColumn: Customer Zip Prefix
 
+	/// City of the customer's most recent order.
 	column 'Customer City'
 		dataType: string
 		lineageTag: 245a818e-4d4d-40ab-bf4e-535e60fd9347
+		summarizeBy: none
 		sourceColumn: Customer City
 
+	/// State (2-letter code) of the customer's most recent order.
 	column 'Customer State'
 		dataType: string
 		lineageTag: 40b45e9d-2d6f-4736-907c-88dff799c95e
+		summarizeBy: none
 		sourceColumn: Customer State
 
 	partition Customer = m

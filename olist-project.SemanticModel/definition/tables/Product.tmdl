@@ -4,66 +4,86 @@ table Product
 
 	column 'Product ID'
 		dataType: string
+		isHidden
 		lineageTag: b6c9f84b-7d8f-4d47-9594-56d7b24f7a3a
+		summarizeBy: none
 		sourceColumn: Product ID
 
+	/// Product category in English (Unknown when missing).
 	column Category
 		dataType: string
 		lineageTag: 086797b7-2458-466f-9558-8ef00aa634d0
+		summarizeBy: none
 		sourceColumn: Category
 
+	/// Original Portuguese category name (Unknown when missing).
 	column 'Category (Portuguese)'
 		dataType: string
 		lineageTag: 5a7b8d7e-d915-40c1-b7d8-a031289d4280
+		summarizeBy: none
 		sourceColumn: Category (Portuguese)
 
+	/// Number of characters in the product name.
 	column 'Product Name Length'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: 5ba66ed5-d7b3-41fb-8c11-92f22368276d
+		summarizeBy: none
 		sourceColumn: Product Name Length
 
+	/// Number of characters in the product description.
 	column 'Product Description Length'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: 8b8c6525-b2f4-4681-b303-6419b9ced836
+		summarizeBy: none
 		sourceColumn: Product Description Length
 
+	/// Number of published product photos.
 	column 'Product Photos Qty'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: 53a67e21-d053-4103-8910-359bb66fdd35
+		summarizeBy: none
 		sourceColumn: Product Photos Qty
 
+	/// Product weight in grams.
 	column 'Product Weight (g)'
 		dataType: int64
 		formatString: #,0
 		displayFolder: Attributes
 		lineageTag: 8d05db95-5492-4f9f-80bc-4f6eb7ccac24
+		summarizeBy: none
 		sourceColumn: Product Weight (g)
 
+	/// Product length in centimetres.
 	column 'Product Length (cm)'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: bf14fb63-e0ce-4239-a969-7db978756a86
+		summarizeBy: none
 		sourceColumn: Product Length (cm)
 
+	/// Product height in centimetres.
 	column 'Product Height (cm)'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: 48eb7b04-b26b-4267-b323-42ef2505ad4d
+		summarizeBy: none
 		sourceColumn: Product Height (cm)
 
+	/// Product width in centimetres.
 	column 'Product Width (cm)'
 		dataType: int64
 		formatString: 0
 		displayFolder: Attributes
 		lineageTag: 484ede52-76a9-40a9-a330-b39c58e12f9c
+		summarizeBy: none
 		sourceColumn: Product Width (cm)
 
 	partition Product = m

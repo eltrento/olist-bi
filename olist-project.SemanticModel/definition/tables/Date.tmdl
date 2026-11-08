@@ -8,62 +8,81 @@ table Date
 		isKey
 		formatString: yyyy-mm-dd
 		lineageTag: 9e4d624c-9f22-404b-b442-a851d8a8b601
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Date]
 
+	/// Calendar year.
 	column Year
 		formatString: 0
 		lineageTag: a25d6eb5-d93b-4504-bf61-f7b7e0b8410d
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Year]
 
+	/// Calendar quarter (Q1-Q4).
 	column Quarter
 		lineageTag: 08b573cb-b477-4799-bde1-fec333dd9b75
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Quarter]
 
 	column 'Month Number'
+		isHidden
 		formatString: 0
 		displayFolder: Sort Keys
 		lineageTag: 118246f1-d31f-419d-86c3-c6a39b94af37
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Month Number]
 
+	/// Month abbreviation (Jan-Dec), sorted by month number.
 	column Month
 		lineageTag: 57537e13-4664-4e47-8f01-a223f2e56f7f
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Month]
 		sortByColumn: 'Month Number'
 
+	/// Year and month (yyyy-mm).
 	column 'Year Month'
 		lineageTag: aaad830d-9166-4905-af18-b80cc4a6ccf5
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Year Month]
 		sortByColumn: 'Year Month Number'
 
 	column 'Year Month Number'
+		isHidden
 		formatString: 0
 		displayFolder: Sort Keys
 		lineageTag: 1310a018-c36c-480e-969e-3c2f2282127b
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Year Month Number]
 
+	/// Weekday abbreviation (Mon-Sun), sorted Monday first.
 	column 'Day of Week'
 		lineageTag: 5b0dc88e-8ebc-44dc-b0ef-38ea91f63daa
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Day of Week]
 		sortByColumn: 'Day of Week Number'
 
 	/// Monday = 1 ... Sunday = 7.
 	column 'Day of Week Number'
+		isHidden
 		formatString: 0
 		displayFolder: Sort Keys
 		lineageTag: f10ed16b-f02d-42db-b0eb-e032e2f14d9f
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Day of Week Number]
 
+	/// True for Saturday and Sunday.
 	column 'Is Weekend'
 		lineageTag: dfd051e7-6dd5-4e1e-8ce2-32f56952d46f
+		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Is Weekend]
 

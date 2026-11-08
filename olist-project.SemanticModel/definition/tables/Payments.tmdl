@@ -4,25 +4,32 @@ table Payments
 
 	column 'Order ID'
 		dataType: string
+		isHidden
 		lineageTag: e6215362-6e5c-4b77-92e3-5ffaa1c6e2d8
+		summarizeBy: none
 		sourceColumn: Order ID
 
 	column 'Payment Sequential'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 5b4505cc-c42b-4359-8df8-c6c0ce73dbbf
+		summarizeBy: none
 		sourceColumn: Payment Sequential
 
 	/// Credit Card, Boleto, Voucher, Debit Card or Not Defined.
 	column 'Payment Type'
 		dataType: string
 		lineageTag: 0db27fd3-5816-4fec-bf84-1835ded7e38d
+		summarizeBy: none
 		sourceColumn: Payment Type
 
+	/// Number of installments chosen by the customer.
 	column 'Payment Installments'
 		dataType: int64
 		formatString: 0
 		lineageTag: a5828f15-f37c-403c-81c7-0ca4b78164e7
+		summarizeBy: none
 		sourceColumn: Payment Installments
 
 	/// Amount paid in BRL (includes freight; vouchers and installments make it differ from item totals).
@@ -30,6 +37,7 @@ table Payments
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 6f9aa07d-b48f-4427-ad5b-9e8e9d3927ad
+		summarizeBy: none
 		sourceColumn: Payment Value
 
 	partition Payments = m

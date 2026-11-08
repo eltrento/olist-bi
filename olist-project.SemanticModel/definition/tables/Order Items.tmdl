@@ -4,23 +4,31 @@ table 'Order Items'
 
 	column 'Order ID'
 		dataType: string
+		isHidden
 		lineageTag: 50ea355a-9ff4-470a-bc3c-1d777a0ffd5d
+		summarizeBy: none
 		sourceColumn: Order ID
 
 	column 'Order Item Number'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 147bd9d7-52a3-4ccd-a567-0e9e22880a05
+		summarizeBy: none
 		sourceColumn: Order Item Number
 
 	column 'Product ID'
 		dataType: string
+		isHidden
 		lineageTag: ca78d48c-b5b6-4955-8cc6-a9a39acd79b7
+		summarizeBy: none
 		sourceColumn: Product ID
 
 	column 'Seller ID'
 		dataType: string
+		isHidden
 		lineageTag: 96c68bef-1134-4113-b67e-f635bf6729a3
+		summarizeBy: none
 		sourceColumn: Seller ID
 
 	/// Seller's shipping deadline. Not related to Date (a few values fall in 2020).
@@ -28,6 +36,7 @@ table 'Order Items'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		lineageTag: bdc952fa-c587-41ae-87f9-3f9b9ace39e1
+		summarizeBy: none
 		sourceColumn: Shipping Limit Timestamp
 
 	/// Item price in BRL, excluding freight.
@@ -35,6 +44,7 @@ table 'Order Items'
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 7339b94d-2c5e-40a1-a266-3e22a73e393e
+		summarizeBy: none
 		sourceColumn: Price
 
 	/// Freight charged for the item in BRL.
@@ -42,6 +52,7 @@ table 'Order Items'
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 02cb5b1b-5737-4f88-a76b-b7e3b1378438
+		summarizeBy: none
 		sourceColumn: Freight Value
 
 	partition 'Order Items' = m

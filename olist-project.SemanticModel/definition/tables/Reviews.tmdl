@@ -4,12 +4,16 @@ table Reviews
 
 	column 'Review ID'
 		dataType: string
+		isHidden
 		lineageTag: 2e231ead-1f5d-4ff7-b5c8-f575bbf9250d
+		summarizeBy: none
 		sourceColumn: Review ID
 
 	column 'Order ID'
 		dataType: string
+		isHidden
 		lineageTag: 9c51d9a1-f205-4a2c-9b34-bb41fdc30635
+		summarizeBy: none
 		sourceColumn: Order ID
 
 	/// Score from 1 to 5.
@@ -17,8 +21,10 @@ table Reviews
 		dataType: int64
 		formatString: 0
 		lineageTag: 92b9d731-5898-4e0c-932e-e92469161c30
+		summarizeBy: none
 		sourceColumn: Review Score
 
+	/// Date the satisfaction survey was sent to the customer.
 	column 'Review Created Date'
 		dataType: dateTime
 		formatString: yyyy-mm-dd
@@ -30,16 +36,19 @@ table Reviews
 
 		annotation SummarizationSetBy = Automatic
 
+	/// When the customer answered the survey.
 	column 'Review Answer Timestamp'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		lineageTag: 84649397-f4e2-407c-a2e8-44745a42cb40
+		summarizeBy: none
 		sourceColumn: Review Answer Timestamp
 
 	/// True when the review has a non-empty comment message.
 	column 'Has Comment'
 		dataType: boolean
 		lineageTag: e6d93db0-5273-46d7-85a0-440e8a050e45
+		summarizeBy: none
 		sourceColumn: Has Comment
 
 	partition Reviews = m

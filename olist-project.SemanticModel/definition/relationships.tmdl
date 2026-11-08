@@ -1,0 +1,38 @@
+relationship fd9b3103-c9a8-4892-9401-31f7e5ed7fe1
+	fromColumn: 'Order Items'.'Order ID'
+	toColumn: Orders.'Order ID'
+
+relationship 4bc4af81-caad-4600-9511-4469c971f394
+	fromColumn: Payments.'Order ID'
+	toColumn: Orders.'Order ID'
+
+relationship c4785e98-2dce-4ec2-9379-94b36ed8990a
+	fromColumn: Reviews.'Order ID'
+	toColumn: Orders.'Order ID'
+
+relationship 6efc0046-fe12-45e2-8c3d-985637e04532
+	fromColumn: 'Order Items'.'Product ID'
+	toColumn: Product.'Product ID'
+
+relationship d10aa8ea-afd9-4575-aa6e-c7d05694f797
+	fromColumn: 'Order Items'.'Seller ID'
+	toColumn: Seller.'Seller ID'
+
+relationship ad6cc544-bb77-4bc6-84ae-c040c8c71686
+	fromColumn: Orders.'Customer Unique ID'
+	toColumn: Customer.'Customer Unique ID'
+
+relationship 72ff5323-42be-49ad-a7a7-861ff2ead7bf
+	fromColumn: Orders.'Purchase Date'
+	toColumn: Date.Date
+
+relationship ca58ed52-6f1b-41d6-9436-4869e6940593
+	isActive: false
+	fromColumn: Orders.'Delivered Date'
+	toColumn: Date.Date
+
+relationship 61db8959-5147-4e82-9cbb-fb3d2403be33
+	isActive: false
+	fromColumn: Orders.'Estimated Delivery Date'
+	toColumn: Date.Date
+

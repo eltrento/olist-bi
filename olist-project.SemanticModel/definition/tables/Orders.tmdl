@@ -4,28 +4,37 @@ table Orders
 
 	column 'Order ID'
 		dataType: string
+		isHidden
 		lineageTag: d4e66b4a-5a75-40dd-a090-50132d6207f0
+		summarizeBy: none
 		sourceColumn: Order ID
 
 	column 'Customer Unique ID'
 		dataType: string
+		isHidden
 		lineageTag: e7f0f9e0-4476-4002-9bee-683ff40a77ca
+		summarizeBy: none
 		sourceColumn: Customer Unique ID
 
+	/// Order status: Delivered, Shipped, Canceled, Unavailable, Invoiced, Processing, Created, Approved.
 	column 'Order Status'
 		dataType: string
 		lineageTag: 173ecf5f-67ae-416a-8920-e7c1a4d941ad
+		summarizeBy: none
 		sourceColumn: Order Status
 
+	/// When the order was placed.
 	column 'Purchase Timestamp'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		displayFolder: Timestamps
 		lineageTag: ee6df6a1-1747-4d02-ab83-0e969b420083
+		summarizeBy: none
 		sourceColumn: Purchase Timestamp
 
 	column 'Purchase Date'
 		dataType: dateTime
+		isHidden
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 76b39c64-5962-4b11-8adf-a44991b3e4c4
@@ -36,29 +45,36 @@ table Orders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// When the payment was approved.
 	column 'Approved Timestamp'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		displayFolder: Timestamps
 		lineageTag: 412cfdb4-2973-4b59-8069-fe20f38534b7
+		summarizeBy: none
 		sourceColumn: Approved Timestamp
 
+	/// When the order was handed to the logistics carrier.
 	column 'Carrier Handoff Timestamp'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		displayFolder: Timestamps
 		lineageTag: 436bfa00-259f-4708-8451-02b86d381ae3
+		summarizeBy: none
 		sourceColumn: Carrier Handoff Timestamp
 
+	/// When the order was delivered to the customer.
 	column 'Delivered Timestamp'
 		dataType: dateTime
 		formatString: yyyy-mm-dd hh:nn:ss
 		displayFolder: Timestamps
 		lineageTag: 7158c75c-04fa-40e2-8f56-8a9100b40d68
+		summarizeBy: none
 		sourceColumn: Delivered Timestamp
 
 	column 'Delivered Date'
 		dataType: dateTime
+		isHidden
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 93203cf1-ba99-42af-864d-468cd7fdbc85
@@ -71,6 +87,7 @@ table Orders
 
 	column 'Estimated Delivery Date'
 		dataType: dateTime
+		isHidden
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 060e90bd-484c-4550-8607-e1df2f992583
@@ -86,6 +103,7 @@ table Orders
 		dataType: boolean
 		displayFolder: Flags
 		lineageTag: a235a429-7956-4bf4-8da7-6765c5c5f615
+		summarizeBy: none
 		sourceColumn: Is Sales Order
 
 	/// True when the order has a delivered customer date (regardless of status).
@@ -93,6 +111,7 @@ table Orders
 		dataType: boolean
 		displayFolder: Flags
 		lineageTag: 2cd7605e-0ba5-4b36-8a3a-c6e83f6d3caa
+		summarizeBy: none
 		sourceColumn: Is Delivered
 
 	/// Delivered Date > Estimated Delivery Date (date-only). Blank when not delivered.
@@ -100,6 +119,7 @@ table Orders
 		dataType: boolean
 		displayFolder: Flags
 		lineageTag: f100f489-4372-4e5d-803a-88df1f1bce12
+		summarizeBy: none
 		sourceColumn: Is Late
 
 	/// Delivered Date - Purchase Date in days. Blank when not delivered.
@@ -107,6 +127,7 @@ table Orders
 		dataType: int64
 		formatString: 0
 		lineageTag: d8e32b2e-1131-4c98-9c6b-c6941c796795
+		summarizeBy: none
 		sourceColumn: Delivery Days
 
 	partition Orders = m

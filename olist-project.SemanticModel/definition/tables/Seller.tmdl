@@ -4,22 +4,30 @@ table Seller
 
 	column 'Seller ID'
 		dataType: string
+		isHidden
 		lineageTag: 96b3ee4a-bf69-4923-af2e-017664ba165f
+		summarizeBy: none
 		sourceColumn: Seller ID
 
+	/// First 5 digits of the seller's zip code.
 	column 'Seller Zip Prefix'
 		dataType: string
 		lineageTag: 86737fe1-3747-48ee-8388-3a8aa0c49525
+		summarizeBy: none
 		sourceColumn: Seller Zip Prefix
 
+	/// Seller's city.
 	column 'Seller City'
 		dataType: string
 		lineageTag: e998e7d2-12f7-452f-84fb-86bbf8091a4f
+		summarizeBy: none
 		sourceColumn: Seller City
 
+	/// Seller's state (2-letter code).
 	column 'Seller State'
 		dataType: string
 		lineageTag: 4d9c7c78-cc1f-4c04-acac-3698ec4c4aff
+		summarizeBy: none
 		sourceColumn: Seller State
 
 	partition Seller = m
