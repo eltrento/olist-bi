@@ -50,6 +50,7 @@ Run these in order (type `Read prompts/01-explore-data.md and do it`):
 1. In TE3, create a new empty model (or open a model in a PBIP's `*.SemanticModel` folder). Save into `model/` as TMDL so it's git-friendly.
 2. **Tools > MCP Server...** Set *Model metadata* to **Read/Write**. Leave *Model data* on Deny unless you want Claude to run DAX checks (data values then go to the model). Click **Start server**. Default address: `http://127.0.0.1:42100/`.
 3. In a terminal: `claude mcp add --transport http tabular-editor http://127.0.0.1:42100/` (or copy it from the dialog's *Export configuration*, which is required if you enable an access token).
+   If PowerShell says `claude` is not recognized, the CLI is installed but `%USERPROFILE%\.local\bin` isn't on PATH: run `& "$env:USERPROFILE\.local\bin\claude.exe" mcp add ...` instead, or add that folder to your user PATH. Check with `claude mcp get tabular-editor` (should say Connected).
 4. Restart your Claude Code session, run `/mcp`, and ask: "Which model is open in Tabular Editor?"
 5. Run `prompts/03-build-model-in-te3.md`, then `prompts/04-measures.md`.
 6. Permissions are read when the server starts: after changing them, stop/start the server and reconnect.
