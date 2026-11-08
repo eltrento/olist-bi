@@ -1,6 +1,6 @@
 # Report plan (prompt 05)
 
-Status: **proposal, awaiting approval** (2026-11-08). No report files changed yet.
+Status: **approved 2026-11-08 with the defaults**: Seller Label column (`Seller 3442f8 (Campinas, SP)`), Review Count + Active Sellers measures, Sales YoY % tooltip-only. Slicers are dropdowns.
 Current state: `olist-project.Report/` is the blank PBIR Desktop created: one empty page ("Page 1", 1280×720, FitToPage), base theme CY26SU05.
 
 ## Model facts that shape the report

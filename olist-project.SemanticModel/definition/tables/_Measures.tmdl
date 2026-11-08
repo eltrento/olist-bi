@@ -135,6 +135,18 @@ table _Measures
 		displayFolder: Time Intelligence
 		lineageTag: b2ace01e-d085-4a7b-9a21-d81c08704304
 
+	/// Number of reviews (review rows).
+	measure 'Review Count' = COUNTROWS( Reviews )
+		formatString: #,0
+		displayFolder: Reviews
+		lineageTag: c4ca5e63-bfdd-49eb-a735-7405238b442d
+
+	/// Distinct sellers with at least one item on a Sales order.
+	measure 'Active Sellers' = CALCULATE( DISTINCTCOUNT( 'Order Items'[Seller ID] ), KEEPFILTERS( Orders[Is Sales Order] = TRUE( ) ) )
+		formatString: #,0
+		displayFolder: Customers
+		lineageTag: abc1809b-bc5d-46ad-9ba6-cb9e17b4878a
+
 	column Value
 		isHidden
 		isAvailableInMdx: false

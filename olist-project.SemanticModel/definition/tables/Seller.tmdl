@@ -31,6 +31,13 @@ table Seller
 		summarizeBy: none
 		sourceColumn: Seller State
 
+	/// Short readable seller name: first 6 characters of the Seller ID plus city and state.
+	column 'Seller Label'
+		dataType: string
+		lineageTag: 4070d3af-5fcf-4e79-9579-720606d4b6f4
+		summarizeBy: none
+		sourceColumn: Seller Label
+
 	partition Seller = m
 		source =
 				let
@@ -40,9 +47,11 @@ table Seller
 				        {"seller_zip_code_prefix", each Text.PadStart(_, 5, "0"), type text},
 				        {"seller_city", Text.Proper, type text},
 				        {"seller_state", Text.Upper, type text}}),
-				    Result = Table.RenameColumns(Cleaned, {
+				    Renamed = Table.RenameColumns(Cleaned, {
 				        {"seller_id", "Seller ID"}, {"seller_zip_code_prefix", "Seller Zip Prefix"},
-				        {"seller_city", "Seller City"}, {"seller_state", "Seller State"}})
+				        {"seller_city", "Seller City"}, {"seller_state", "Seller State"}}),
+				    Result = Table.AddColumn(Renamed, "Seller Label", each
+				        "Seller " & Text.Start([Seller ID], 6) & " (" & [Seller City] & ", " & [Seller State] & ")", type text)
 				in
 				    Result
 

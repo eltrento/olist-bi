@@ -42,3 +42,8 @@ Decided with the project owner after data exploration (prompt 01, 2026-11-07). C
 - Unique Customers = customers with at least one counted order (Sales order with items) in the current filter.
 - Repeat Customer % = share of those customers with 2+ counted orders **within the same filter** (period, state, ...), not lifetime.
 - % 5-Star / % 1-Star = share of **reviews** (review rows), not of orders.
+
+## Report (prompt 05, 2026-11-08)
+- Sellers are shown by `Seller Label` = `Seller <first 6 chars of seller_id> (<City>, <State>)` (the 6-char prefix is unique across all 3,095 sellers).
+- `Review Count` = number of review rows; `Active Sellers` = distinct sellers with an item on a Sales order.
+- Sales YoY % is shown only in the monthly trend tooltip (year-level YoY is distorted by partial 2016 and 2018).
