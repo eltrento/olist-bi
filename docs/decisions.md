@@ -10,6 +10,9 @@ Decided with the project owner after data exploration (prompt 01, 2026-11-07). C
 - Freight is a separate measure; payments totals are reported separately.
 - Profile figures: all items R$13,591,643.70; excluded R$97,242.96 on 467 orders; Sales R$13,494,400.74.
 
+## Orders
+- Order Count (and the denominator of Average Order Value) = orders that have items and are Sales orders (status not canceled/unavailable): 98,199.
+
 ## Date
 - Keep the full range (purchases 2016-09-04 to 2018-10-17). Thin months at both ends are handled by slicing in the report, not by trimming data.
 - Date table must cover every date column used in relationships (purchase, delivered, estimated delivery; estimates run to 2018-11-12).
@@ -21,6 +24,7 @@ Decided with the project owner after data exploration (prompt 01, 2026-11-07). C
 - Grain of the Reviews fact: `review_id` + `order_id` (`review_id` alone is not unique).
 - Order review score = average of that order's reviews (547 orders have 2-3 reviews).
 - Overall average review score = average of the per-order averages (each order weighs equally). Profile: 4.0868 vs 4.0864 for a plain average of all reviews.
+- Comment title/message text is not loaded; a `Has Comment` flag is kept.
 
 ## Product category
 - Null category -> `Unknown` (610 products).
@@ -29,4 +33,5 @@ Decided with the project owner after data exploration (prompt 01, 2026-11-07). C
   - `portateis_cozinha_e_preparadores_de_alimentos` -> `portable_kitchen_and_food_preparers`
 
 ## Delivery
+- An order counts as delivered when it has a delivered customer date (96,476), regardless of status (status and dates disagree on 14 orders).
 - Late = delivered customer **date** > estimated delivery **date** (date-only comparison; the estimate is always midnight, so a timestamp comparison would mark same-day deliveries late).

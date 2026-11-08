@@ -1,6 +1,6 @@
 # Star schema plan (prompt 02)
 
-Status: **proposal, awaiting approval**. Business rules come from [decisions.md](decisions.md).
+Status: **approved 2026-11-07** (including the proposals for the former open questions, now in decisions.md). Business rules come from [decisions.md](decisions.md).
 Current state: `model/` and `report/` are empty; nothing is built yet.
 
 ## Changes vs. the "Target model" in CLAUDE.md
@@ -99,7 +99,7 @@ Power Query: read products → left-join translation on category → for the 2 u
 
 ### Reviews (fact)
 - Source: `olist_order_reviews_dataset.csv`. Grain: one review of an order. Key: `Review ID` + `Order ID` (99,224 rows).
-- Columns: Review ID (hidden), Order ID (FK, hidden), Review Score, Review Created Date, Review Answer Timestamp, Has Comment (logical), plus comment text (see open question 3).
+- Columns: Review ID (hidden), Order ID (FK, hidden), Review Score, Review Created Date, Review Answer Timestamp, Has Comment (logical: comment message not null). Comment title and message text are dropped.
 
 ## Relationships
 
@@ -126,8 +126,8 @@ All many-to-one, single direction (one side filters many side).
 - **Late by date vs. timestamp:** 6,535 late orders by date (the agreed rule) vs. 7,827 by timestamp.
 - **Shipping Limit Timestamp** has 4 values in 2020, outside the Date table; it is not related to Date, so harmless.
 
-## Open questions
+## Resolved questions
 
-1. **Order Count / Average Order Value scope.** Proposal: count orders that have items and are Sales orders (98,199), so AOV = Sales / Order Count uses the same orders. Alternative: all orders in Orders (99,441).
-2. **Delivery measures base.** Proposal: an order is delivered when it has a Delivered Date (96,476), regardless of status.
-3. **Review comment text.** Proposal: drop title/message text and keep a `Has Comment` flag (40,977 reviews have a message). Keep the text only if the report should show or search comments.
+1. **Order Count / AOV scope:** orders that have items and are Sales orders (98,199).
+2. **Delivery measures base:** delivered = has a Delivered Date (96,476), regardless of status.
+3. **Review comment text:** dropped; `Has Comment` flag kept.

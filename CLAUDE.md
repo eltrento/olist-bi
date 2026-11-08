@@ -11,21 +11,21 @@ Goal: build a star-schema Power BI semantic model from the Olist Brazilian E-Com
 ## Data rules
 - `data/raw/` is READ-ONLY. Never edit, move, rename or delete files there. Never commit it (gitignored).
 - Do not print large files into the conversation. Profile with scripts (pandas) and show summaries only.
-- The model loads CSVs through Power Query with a text parameter `DataPath` (folder containing the CSVs), so the path is changed in one place.
+- The model loads CSVs through Power Query with a text parameter `DataPath` (folder containing the CSVs, `data/raw/archive/`), so the path is changed in one place.
 - Start WITHOUT the geolocation table (1M rows); add it later as an explicit step.
 
-## Target model (confirm with me before building)
+## Target model (approved 2026-11-07; full spec in `docs/model-plan.md`, business rules in `docs/decisions.md`)
 - Fact tables: `Order Items` (grain: one item in an order), `Payments` (order payment), `Reviews` (order review).
 - Dimensions: `Orders` (hub: status, delivery flags), `Customer` (key = customer_unique_id), `Product` (English category), `Seller`, `Date`.
-- `Orders` filters all three fact tables (one-to-many, single direction). Customer, Product, Seller filter `Order Items`; Customer filters Orders via a customer unique key added to Orders.
-- `Date` is a marked date table with an active relationship on order purchase date and inactive ones for delivered / estimated delivery (use USERELATIONSHIP in measures).
+- `Orders` filters all three fact tables (one-to-many, single direction). Product and Seller filter `Order Items`. Customer filters Orders via a customer unique key added to Orders (no direct Customer → Order Items: it would create an ambiguous path).
+- `Date` is a marked date table (full calendar years) related to `Orders`: active on purchase date, inactive on delivered / estimated delivery date (use USERELATIONSHIP in measures).
 
 ## Model conventions
 - Table and column names in Title Case with spaces, fix source typos (e.g. `product_name_lenght`).
 - Measures live in a `_Measures` table, with display folders (Sales, Delivery, Customers, Reviews, Time Intelligence), format strings and descriptions.
 - Hide key and foreign-key columns. Set `SummarizeBy = None` on numeric columns; use explicit measures only.
 - Relationships: many-to-one, single direction; no bi-directional unless justified in writing.
-- Revenue definition: default "Sales" = sum of item price (excl. freight). Freight is a separate measure. Payments totals are reported separately. Ask me before changing this.
+- Revenue definition: default "Sales" = sum of item price (excl. freight), excluding canceled/unavailable orders. Freight is a separate measure. Payments totals are reported separately. Ask me before changing this.
 
 ## Working rules
 - Read before changing: summarize the current model state first.
