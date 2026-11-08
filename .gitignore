@@ -1,0 +1,9 @@
+# Raw data is large and reproducible from Kaggle: never commit it
+data/raw/*
+!data/raw/.gitkeep
+data/processed/
+.env
+*.pbix
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+__pycache__/
