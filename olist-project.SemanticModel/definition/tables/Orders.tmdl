@@ -29,7 +29,12 @@ table Orders
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 76b39c64-5962-4b11-8adf-a44991b3e4c4
+		summarizeBy: none
 		sourceColumn: Purchase Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Approved Timestamp'
 		dataType: dateTime
@@ -57,14 +62,24 @@ table Orders
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 93203cf1-ba99-42af-864d-468cd7fdbc85
+		summarizeBy: none
 		sourceColumn: Delivered Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Estimated Delivery Date'
 		dataType: dateTime
 		formatString: yyyy-mm-dd
 		displayFolder: Dates
 		lineageTag: 060e90bd-484c-4550-8607-e1df2f992583
+		summarizeBy: none
 		sourceColumn: Estimated Delivery Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
 
 	/// True unless the order status is Canceled or Unavailable.
 	column 'Is Sales Order'

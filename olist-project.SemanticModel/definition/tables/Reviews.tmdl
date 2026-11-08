@@ -23,7 +23,12 @@ table Reviews
 		dataType: dateTime
 		formatString: yyyy-mm-dd
 		lineageTag: 53fe05f4-613e-49f3-964f-dea436987779
+		summarizeBy: none
 		sourceColumn: Review Created Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Review Answer Timestamp'
 		dataType: dateTime

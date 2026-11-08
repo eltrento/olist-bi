@@ -12,6 +12,8 @@ annotation PBI_ProTooling = ["DevMode"]
 
 annotation __TEdtr = 1
 
+annotation PBI_QueryOrder = ["Orders","Customer","Product","Seller","Order Items","Payments","Reviews","DataPath"]
+
 ref table Orders
 ref table Customer
 ref table Product
@@ -19,6 +21,7 @@ ref table Seller
 ref table 'Order Items'
 ref table Payments
 ref table Reviews
+ref table Date
 
 ref cultureInfo en-US
 

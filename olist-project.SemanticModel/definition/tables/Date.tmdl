@@ -1,0 +1,88 @@
+/// Calendar, full years covering purchase, delivered and estimated delivery dates. Marked as date table.
+table Date
+	lineageTag: 4264a888-1fcd-4d35-9ca7-6cbbda299f86
+	dataCategory: Time
+
+	/// One row per day. Key of the marked date table.
+	column Date
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 9e4d624c-9f22-404b-b442-a851d8a8b601
+		isNameInferred
+		sourceColumn: [Date]
+
+	column Year
+		formatString: 0
+		lineageTag: a25d6eb5-d93b-4504-bf61-f7b7e0b8410d
+		isNameInferred
+		sourceColumn: [Year]
+
+	column Quarter
+		lineageTag: 08b573cb-b477-4799-bde1-fec333dd9b75
+		isNameInferred
+		sourceColumn: [Quarter]
+
+	column 'Month Number'
+		formatString: 0
+		displayFolder: Sort Keys
+		lineageTag: 118246f1-d31f-419d-86c3-c6a39b94af37
+		isNameInferred
+		sourceColumn: [Month Number]
+
+	column Month
+		lineageTag: 57537e13-4664-4e47-8f01-a223f2e56f7f
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+	column 'Year Month'
+		lineageTag: aaad830d-9166-4905-af18-b80cc4a6ccf5
+		isNameInferred
+		sourceColumn: [Year Month]
+		sortByColumn: 'Year Month Number'
+
+	column 'Year Month Number'
+		formatString: 0
+		displayFolder: Sort Keys
+		lineageTag: 1310a018-c36c-480e-969e-3c2f2282127b
+		isNameInferred
+		sourceColumn: [Year Month Number]
+
+	column 'Day of Week'
+		lineageTag: 5b0dc88e-8ebc-44dc-b0ef-38ea91f63daa
+		isNameInferred
+		sourceColumn: [Day of Week]
+		sortByColumn: 'Day of Week Number'
+
+	/// Monday = 1 ... Sunday = 7.
+	column 'Day of Week Number'
+		formatString: 0
+		displayFolder: Sort Keys
+		lineageTag: f10ed16b-f02d-42db-b0eb-e032e2f14d9f
+		isNameInferred
+		sourceColumn: [Day of Week Number]
+
+	column 'Is Weekend'
+		lineageTag: dfd051e7-6dd5-4e1e-8ce2-32f56952d46f
+		isNameInferred
+		sourceColumn: [Is Weekend]
+
+	partition Date = calculated
+		mode: import
+		source =
+				ADDCOLUMNS (
+				    CALENDAR (
+				        DATE ( YEAR ( MIN ( Orders[Purchase Date] ) ), 1, 1 ),
+				        DATE ( YEAR ( MAX ( Orders[Estimated Delivery Date] ) ), 12, 31 )
+				    ),
+				    "Year", YEAR ( [Date] ),
+				    "Quarter", "Q" & QUARTER ( [Date] ),
+				    "Month Number", MONTH ( [Date] ),
+				    "Month", FORMAT ( [Date], "mmm" ),
+				    "Year Month", FORMAT ( [Date], "yyyy-mm" ),
+				    "Year Month Number", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+				    "Day of Week", FORMAT ( [Date], "ddd" ),
+				    "Day of Week Number", WEEKDAY ( [Date], 2 ),
+				    "Is Weekend", WEEKDAY ( [Date], 2 ) >= 6
+				)
+
