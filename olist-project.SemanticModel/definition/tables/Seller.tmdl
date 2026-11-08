@@ -5,6 +5,7 @@ table Seller
 	column 'Seller ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 96b3ee4a-bf69-4923-af2e-017664ba165f
 		summarizeBy: none
 		sourceColumn: Seller ID

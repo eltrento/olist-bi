@@ -5,6 +5,7 @@ table Reviews
 	column 'Review ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 2e231ead-1f5d-4ff7-b5c8-f575bbf9250d
 		summarizeBy: none
 		sourceColumn: Review ID
@@ -12,6 +13,7 @@ table Reviews
 	column 'Order ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 9c51d9a1-f205-4a2c-9b34-bb41fdc30635
 		summarizeBy: none
 		sourceColumn: Order ID

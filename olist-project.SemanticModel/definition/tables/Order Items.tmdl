@@ -5,6 +5,7 @@ table 'Order Items'
 	column 'Order ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 50ea355a-9ff4-470a-bc3c-1d777a0ffd5d
 		summarizeBy: none
 		sourceColumn: Order ID
@@ -13,6 +14,7 @@ table 'Order Items'
 		dataType: int64
 		isHidden
 		formatString: 0
+		isAvailableInMdx: false
 		lineageTag: 147bd9d7-52a3-4ccd-a567-0e9e22880a05
 		summarizeBy: none
 		sourceColumn: Order Item Number
@@ -20,6 +22,7 @@ table 'Order Items'
 	column 'Product ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: ca78d48c-b5b6-4955-8cc6-a9a39acd79b7
 		summarizeBy: none
 		sourceColumn: Product ID
@@ -27,6 +30,7 @@ table 'Order Items'
 	column 'Seller ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 96c68bef-1134-4113-b67e-f635bf6729a3
 		summarizeBy: none
 		sourceColumn: Seller ID

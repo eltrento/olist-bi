@@ -5,6 +5,7 @@ table Payments
 	column 'Order ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: e6215362-6e5c-4b77-92e3-5ffaa1c6e2d8
 		summarizeBy: none
 		sourceColumn: Order ID
@@ -13,6 +14,7 @@ table Payments
 		dataType: int64
 		isHidden
 		formatString: 0
+		isAvailableInMdx: false
 		lineageTag: 5b4505cc-c42b-4359-8df8-c6c0ce73dbbf
 		summarizeBy: none
 		sourceColumn: Payment Sequential

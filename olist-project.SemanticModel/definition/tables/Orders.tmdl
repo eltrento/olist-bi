@@ -5,6 +5,7 @@ table Orders
 	column 'Order ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: d4e66b4a-5a75-40dd-a090-50132d6207f0
 		summarizeBy: none
 		sourceColumn: Order ID
@@ -12,6 +13,7 @@ table Orders
 	column 'Customer Unique ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: e7f0f9e0-4476-4002-9bee-683ff40a77ca
 		summarizeBy: none
 		sourceColumn: Customer Unique ID
@@ -36,6 +38,7 @@ table Orders
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		isAvailableInMdx: false
 		displayFolder: Dates
 		lineageTag: 76b39c64-5962-4b11-8adf-a44991b3e4c4
 		summarizeBy: none
@@ -76,6 +79,7 @@ table Orders
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		isAvailableInMdx: false
 		displayFolder: Dates
 		lineageTag: 93203cf1-ba99-42af-864d-468cd7fdbc85
 		summarizeBy: none
@@ -89,6 +93,7 @@ table Orders
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		isAvailableInMdx: false
 		displayFolder: Dates
 		lineageTag: 060e90bd-484c-4550-8607-e1df2f992583
 		summarizeBy: none

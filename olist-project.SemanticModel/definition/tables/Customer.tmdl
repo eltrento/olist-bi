@@ -5,6 +5,7 @@ table Customer
 	column 'Customer Unique ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: ee84f8e9-228d-471e-9c2b-95eecb5fa5b8
 		summarizeBy: none
 		sourceColumn: Customer Unique ID

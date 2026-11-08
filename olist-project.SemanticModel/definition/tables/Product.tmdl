@@ -5,6 +5,7 @@ table Product
 	column 'Product ID'
 		dataType: string
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: b6c9f84b-7d8f-4d47-9594-56d7b24f7a3a
 		summarizeBy: none
 		sourceColumn: Product ID
