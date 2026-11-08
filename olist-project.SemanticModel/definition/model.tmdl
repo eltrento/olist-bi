@@ -10,5 +10,12 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
+annotation __TEdtr = 1
+
+ref table Orders
+ref table Customer
+ref table Product
+ref table Seller
+
 ref cultureInfo en-US
 

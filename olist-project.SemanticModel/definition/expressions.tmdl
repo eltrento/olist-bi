@@ -1,0 +1,4 @@
+/// Folder that contains the Olist CSVs (with trailing backslash).
+expression DataPath = "C:\Users\trent\Desktop\olist-bi\data\raw\archive\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: f8dd96e9-9eff-4df6-91e7-aa0f6b690c46
+

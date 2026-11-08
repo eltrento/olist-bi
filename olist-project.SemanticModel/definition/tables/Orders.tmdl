@@ -1,0 +1,128 @@
+/// One row per order. Hub dimension: filters Order Items, Payments and Reviews.
+table Orders
+	lineageTag: 45064d74-db34-4203-b67c-95b61327d740
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: d4e66b4a-5a75-40dd-a090-50132d6207f0
+		sourceColumn: Order ID
+
+	column 'Customer Unique ID'
+		dataType: string
+		lineageTag: e7f0f9e0-4476-4002-9bee-683ff40a77ca
+		sourceColumn: Customer Unique ID
+
+	column 'Order Status'
+		dataType: string
+		lineageTag: 173ecf5f-67ae-416a-8920-e7c1a4d941ad
+		sourceColumn: Order Status
+
+	column 'Purchase Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		displayFolder: Timestamps
+		lineageTag: ee6df6a1-1747-4d02-ab83-0e969b420083
+		sourceColumn: Purchase Timestamp
+
+	column 'Purchase Date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		displayFolder: Dates
+		lineageTag: 76b39c64-5962-4b11-8adf-a44991b3e4c4
+		sourceColumn: Purchase Date
+
+	column 'Approved Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		displayFolder: Timestamps
+		lineageTag: 412cfdb4-2973-4b59-8069-fe20f38534b7
+		sourceColumn: Approved Timestamp
+
+	column 'Carrier Handoff Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		displayFolder: Timestamps
+		lineageTag: 436bfa00-259f-4708-8451-02b86d381ae3
+		sourceColumn: Carrier Handoff Timestamp
+
+	column 'Delivered Timestamp'
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		displayFolder: Timestamps
+		lineageTag: 7158c75c-04fa-40e2-8f56-8a9100b40d68
+		sourceColumn: Delivered Timestamp
+
+	column 'Delivered Date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		displayFolder: Dates
+		lineageTag: 93203cf1-ba99-42af-864d-468cd7fdbc85
+		sourceColumn: Delivered Date
+
+	column 'Estimated Delivery Date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		displayFolder: Dates
+		lineageTag: 060e90bd-484c-4550-8607-e1df2f992583
+		sourceColumn: Estimated Delivery Date
+
+	/// True unless the order status is Canceled or Unavailable.
+	column 'Is Sales Order'
+		dataType: boolean
+		displayFolder: Flags
+		lineageTag: a235a429-7956-4bf4-8da7-6765c5c5f615
+		sourceColumn: Is Sales Order
+
+	/// True when the order has a delivered customer date (regardless of status).
+	column 'Is Delivered'
+		dataType: boolean
+		displayFolder: Flags
+		lineageTag: 2cd7605e-0ba5-4b36-8a3a-c6e83f6d3caa
+		sourceColumn: Is Delivered
+
+	/// Delivered Date > Estimated Delivery Date (date-only). Blank when not delivered.
+	column 'Is Late'
+		dataType: boolean
+		displayFolder: Flags
+		lineageTag: f100f489-4372-4e5d-803a-88df1f1bce12
+		sourceColumn: Is Late
+
+	/// Delivered Date - Purchase Date in days. Blank when not delivered.
+	column 'Delivery Days'
+		dataType: int64
+		formatString: 0
+		lineageTag: d8e32b2e-1131-4c98-9c6b-c6941c796795
+		sourceColumn: Delivery Days
+
+	partition Orders = m
+		source =
+				let
+				    Source = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_orders_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"order_id", type text}, {"customer_id", type text}, {"order_status", type text},
+				        {"order_purchase_timestamp", type datetime}, {"order_approved_at", type datetime},
+				        {"order_delivered_carrier_date", type datetime}, {"order_delivered_customer_date", type datetime},
+				        {"order_estimated_delivery_date", type datetime}}, "en-US"),
+				    Customers = Table.SelectColumns(Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_customers_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]), {"customer_id", "customer_unique_id"}),
+				    Merged = Table.NestedJoin(Typed, {"customer_id"}, Customers, {"customer_id"}, "Cust", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Merged, "Cust", {"customer_unique_id"}),
+				    AddPurchaseDate = Table.AddColumn(Expanded, "Purchase Date", each DateTime.Date([order_purchase_timestamp]), type date),
+				    AddDeliveredDate = Table.AddColumn(AddPurchaseDate, "Delivered Date", each DateTime.Date([order_delivered_customer_date]), type nullable date),
+				    AddEstimatedDate = Table.AddColumn(AddDeliveredDate, "Estimated Delivery Date", each DateTime.Date([order_estimated_delivery_date]), type date),
+				    AddIsSales = Table.AddColumn(AddEstimatedDate, "Is Sales Order", each not List.Contains({"canceled", "unavailable"}, [order_status]), type logical),
+				    AddIsDelivered = Table.AddColumn(AddIsSales, "Is Delivered", each [Delivered Date] <> null, type logical),
+				    AddIsLate = Table.AddColumn(AddIsDelivered, "Is Late", each if [Delivered Date] = null then null else [Delivered Date] > [Estimated Delivery Date], type nullable logical),
+				    AddDeliveryDays = Table.AddColumn(AddIsLate, "Delivery Days", each if [Delivered Date] = null then null else Duration.Days([Delivered Date] - [Purchase Date]), Int64.Type),
+				    ProperStatus = Table.TransformColumns(AddDeliveryDays, {{"order_status", Text.Proper, type text}}),
+				    Renamed = Table.RenameColumns(ProperStatus, {
+				        {"order_id", "Order ID"}, {"customer_unique_id", "Customer Unique ID"}, {"order_status", "Order Status"},
+				        {"order_purchase_timestamp", "Purchase Timestamp"}, {"order_approved_at", "Approved Timestamp"},
+				        {"order_delivered_carrier_date", "Carrier Handoff Timestamp"}, {"order_delivered_customer_date", "Delivered Timestamp"}}),
+				    Result = Table.SelectColumns(Renamed, {
+				        "Order ID", "Customer Unique ID", "Order Status",
+				        "Purchase Timestamp", "Purchase Date", "Approved Timestamp", "Carrier Handoff Timestamp",
+				        "Delivered Timestamp", "Delivered Date", "Estimated Delivery Date",
+				        "Is Sales Order", "Is Delivered", "Is Late", "Delivery Days"})
+				in
+				    Result
+

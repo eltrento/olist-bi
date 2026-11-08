@@ -1,0 +1,99 @@
+/// One row per product, with the English category.
+table Product
+	lineageTag: 2d335c7b-bb47-4fde-bbe8-ffbabf9d0ae1
+
+	column 'Product ID'
+		dataType: string
+		lineageTag: b6c9f84b-7d8f-4d47-9594-56d7b24f7a3a
+		sourceColumn: Product ID
+
+	column Category
+		dataType: string
+		lineageTag: 086797b7-2458-466f-9558-8ef00aa634d0
+		sourceColumn: Category
+
+	column 'Category (Portuguese)'
+		dataType: string
+		lineageTag: 5a7b8d7e-d915-40c1-b7d8-a031289d4280
+		sourceColumn: Category (Portuguese)
+
+	column 'Product Name Length'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: 5ba66ed5-d7b3-41fb-8c11-92f22368276d
+		sourceColumn: Product Name Length
+
+	column 'Product Description Length'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: 8b8c6525-b2f4-4681-b303-6419b9ced836
+		sourceColumn: Product Description Length
+
+	column 'Product Photos Qty'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: 53a67e21-d053-4103-8910-359bb66fdd35
+		sourceColumn: Product Photos Qty
+
+	column 'Product Weight (g)'
+		dataType: int64
+		formatString: #,0
+		displayFolder: Attributes
+		lineageTag: 8d05db95-5492-4f9f-80bc-4f6eb7ccac24
+		sourceColumn: Product Weight (g)
+
+	column 'Product Length (cm)'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: bf14fb63-e0ce-4239-a969-7db978756a86
+		sourceColumn: Product Length (cm)
+
+	column 'Product Height (cm)'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: 48eb7b04-b26b-4267-b323-42ef2505ad4d
+		sourceColumn: Product Height (cm)
+
+	column 'Product Width (cm)'
+		dataType: int64
+		formatString: 0
+		displayFolder: Attributes
+		lineageTag: 484ede52-76a9-40a9-a330-b39c58e12f9c
+		sourceColumn: Product Width (cm)
+
+	partition Product = m
+		source =
+				let
+				    Products = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_products_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Products, {
+				        {"product_id", type text}, {"product_category_name", type text},
+				        {"product_name_lenght", Int64.Type}, {"product_description_lenght", Int64.Type}, {"product_photos_qty", Int64.Type},
+				        {"product_weight_g", Int64.Type}, {"product_length_cm", Int64.Type}, {"product_height_cm", Int64.Type}, {"product_width_cm", Int64.Type}}, "en-US"),
+				    TranslationFile = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "product_category_name_translation.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    MissingTranslations = #table(type table [product_category_name = text, product_category_name_english = text], {
+				        {"pc_gamer", "pc_gamer"},
+				        {"portateis_cozinha_e_preparadores_de_alimentos", "portable_kitchen_and_food_preparers"}}),
+				    Translation = Table.Distinct(Table.Combine({TranslationFile, MissingTranslations}), {"product_category_name"}),
+				    Merged = Table.NestedJoin(Typed, {"product_category_name"}, Translation, {"product_category_name"}, "Tr", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Merged, "Tr", {"product_category_name_english"}),
+				    AddCategory = Table.AddColumn(Expanded, "Category", each
+				        if [product_category_name_english] = null or [product_category_name_english] = "" then "Unknown"
+				        else Text.Proper(Text.Replace([product_category_name_english], "_", " ")), type text),
+				    CategoryPt = Table.TransformColumns(AddCategory, {{"product_category_name", each if _ = null or _ = "" then "Unknown" else _, type text}}),
+				    Renamed = Table.RenameColumns(CategoryPt, {
+				        {"product_id", "Product ID"}, {"product_category_name", "Category (Portuguese)"},
+				        {"product_name_lenght", "Product Name Length"}, {"product_description_lenght", "Product Description Length"},
+				        {"product_photos_qty", "Product Photos Qty"}, {"product_weight_g", "Product Weight (g)"},
+				        {"product_length_cm", "Product Length (cm)"}, {"product_height_cm", "Product Height (cm)"}, {"product_width_cm", "Product Width (cm)"}}),
+				    Result = Table.SelectColumns(Renamed, {
+				        "Product ID", "Category", "Category (Portuguese)",
+				        "Product Name Length", "Product Description Length", "Product Photos Qty",
+				        "Product Weight (g)", "Product Length (cm)", "Product Height (cm)", "Product Width (cm)"})
+				in
+				    Result
+

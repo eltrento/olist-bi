@@ -1,0 +1,39 @@
+/// One row per seller.
+table Seller
+	lineageTag: 3732c0b2-c8ca-40a3-85ba-e48d51c67a79
+
+	column 'Seller ID'
+		dataType: string
+		lineageTag: 96b3ee4a-bf69-4923-af2e-017664ba165f
+		sourceColumn: Seller ID
+
+	column 'Seller Zip Prefix'
+		dataType: string
+		lineageTag: 86737fe1-3747-48ee-8388-3a8aa0c49525
+		sourceColumn: Seller Zip Prefix
+
+	column 'Seller City'
+		dataType: string
+		lineageTag: e998e7d2-12f7-452f-84fb-86bbf8091a4f
+		sourceColumn: Seller City
+
+	column 'Seller State'
+		dataType: string
+		lineageTag: 4d9c7c78-cc1f-4c04-acac-3698ec4c4aff
+		sourceColumn: Seller State
+
+	partition Seller = m
+		source =
+				let
+				    Sellers = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_sellers_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Cleaned = Table.TransformColumns(Sellers, {
+				        {"seller_id", each _, type text},
+				        {"seller_zip_code_prefix", each Text.PadStart(_, 5, "0"), type text},
+				        {"seller_city", Text.Proper, type text},
+				        {"seller_state", Text.Upper, type text}}),
+				    Result = Table.RenameColumns(Cleaned, {
+				        {"seller_id", "Seller ID"}, {"seller_zip_code_prefix", "Seller Zip Prefix"},
+				        {"seller_city", "Seller City"}, {"seller_state", "Seller State"}})
+				in
+				    Result
+

@@ -7,7 +7,60 @@
         "x": 0,
         "y": 0
       },
-      "nodes": [],
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 62
+          },
+          "nodeIndex": "Customer",
+          "nodeLineageTag": "221c94dd-0d32-4cc3-8a55-97a477f841e1",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 284,
+            "y": 0
+          },
+          "nodeIndex": "Orders",
+          "nodeLineageTag": "45064d74-db34-4203-b67c-95b61327d740",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 0
+          },
+          "nodeIndex": "Product",
+          "nodeLineageTag": "2d335c7b-bb47-4fde-bbe8-ffbabf9d0ae1",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 62
+          },
+          "nodeIndex": "Seller",
+          "nodeLineageTag": "3732c0b2-c8ca-40a3-85ba-e48d51c67a79",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
       "name": "All tables",
       "zoomValue": 100,
       "pinKeyFieldsToTop": false,

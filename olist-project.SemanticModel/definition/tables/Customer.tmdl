@@ -1,0 +1,46 @@
+/// One row per person (customer_unique_id). Location from the customer's most recent order.
+table Customer
+	lineageTag: 221c94dd-0d32-4cc3-8a55-97a477f841e1
+
+	column 'Customer Unique ID'
+		dataType: string
+		lineageTag: ee84f8e9-228d-471e-9c2b-95eecb5fa5b8
+		sourceColumn: Customer Unique ID
+
+	column 'Customer Zip Prefix'
+		dataType: string
+		lineageTag: 1533be5c-17ef-4720-a240-5ad50903778c
+		sourceColumn: Customer Zip Prefix
+
+	column 'Customer City'
+		dataType: string
+		lineageTag: 245a818e-4d4d-40ab-bf4e-535e60fd9347
+		sourceColumn: Customer City
+
+	column 'Customer State'
+		dataType: string
+		lineageTag: 40b45e9d-2d6f-4736-907c-88dff799c95e
+		sourceColumn: Customer State
+
+	partition Customer = m
+		source =
+				let
+				    Customers = Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_customers_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]),
+				    Orders = Table.TransformColumnTypes(
+				        Table.SelectColumns(Table.PromoteHeaders(Csv.Document(File.Contents(DataPath & "olist_orders_dataset.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]), [PromoteAllScalars=true]), {"customer_id", "order_purchase_timestamp"}),
+				        {{"order_purchase_timestamp", type datetime}}, "en-US"),
+				    Merged = Table.NestedJoin(Customers, {"customer_id"}, Orders, {"customer_id"}, "Ord", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Merged, "Ord", {"order_purchase_timestamp"}),
+				    Grouped = Table.Group(Expanded, {"customer_unique_id"}, {{"Latest", each Table.Max(_, "order_purchase_timestamp"), type record}}),
+				    Latest = Table.ExpandRecordColumn(Grouped, "Latest", {"customer_zip_code_prefix", "customer_city", "customer_state"}),
+				    Cleaned = Table.TransformColumns(Latest, {
+				        {"customer_zip_code_prefix", each Text.PadStart(_, 5, "0"), type text},
+				        {"customer_city", Text.Proper, type text},
+				        {"customer_state", Text.Upper, type text}}),
+				    Renamed = Table.RenameColumns(Cleaned, {
+				        {"customer_unique_id", "Customer Unique ID"}, {"customer_zip_code_prefix", "Customer Zip Prefix"},
+				        {"customer_city", "Customer City"}, {"customer_state", "Customer State"}}),
+				    Result = Table.TransformColumnTypes(Renamed, {{"Customer Unique ID", type text}})
+				in
+				    Result
+
